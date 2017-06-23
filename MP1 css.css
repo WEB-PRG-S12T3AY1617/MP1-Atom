@@ -51,5 +51,6 @@ a:hover {
 body {
   background-color: #bdebf9;
   background-image: url(http://wallpapercave.com/wp/9ETYnmB.jpg);
-  background-repeat: repeat;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
