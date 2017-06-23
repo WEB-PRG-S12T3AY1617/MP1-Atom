@@ -14,6 +14,15 @@
   font-weight: bold;
   letter-spacing: 2px;
 }
+#page_div {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+}
+.spec {
+    align-content: space-between;
+}
 h1 {
   font-family: fantasy;
   font-style: oblique;
