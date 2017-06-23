@@ -1,9 +1,14 @@
 #container_div {
+<<<<<<< HEAD
   align-content: center;
   height: 500px;
   width:  500px;
+=======
+>>>>>>> 44a364b46797c5dd9d755515f1e67a2a72510827
   background-color: #e0ecf0;
   display: flex;
+  flex-direction: column;
+  text-align: center;
 }
 #container_div p {
   font-family: sans-serif;
