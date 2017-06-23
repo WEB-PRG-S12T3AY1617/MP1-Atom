@@ -4,8 +4,10 @@
   width:  500px;
   background-color: #e0ecf0;
   display: flex;
+  border-radius: 15px;
   flex-direction: column;
   text-align: center;
+  background-image: url(http://cdn.smosh.com/sites/default/files/ftpuploads/bloguploads/funny-anime-fansub-pigeon.jpg);
 }
 .posts_container_div p {
   font-family: 'montserrat',sans-serif;
