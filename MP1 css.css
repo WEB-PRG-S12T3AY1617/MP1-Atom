@@ -1,4 +1,4 @@
-#posts_container_div {
+.posts_container_div {
   align-content: center;
   height: 500px;
   width:  500px;
@@ -7,7 +7,7 @@
   flex-direction: column;
   text-align: center;
 }
-#posts_container_div p {
+.posts_container_div p {
   font-family: sans-serif;
   font-size: 15px;
   font-style: italic;
@@ -20,8 +20,7 @@
   text-align: center;
   align-items: center;
 }
-.spec {
-    align-content: space-between;
+
 }
 h1 {
   font-family: fantasy;
@@ -30,5 +29,5 @@ h1 {
   letter-spacing: 2px;
 }
 body {
-  background-color: green;
+  background-color: #bdebf9;
 }
