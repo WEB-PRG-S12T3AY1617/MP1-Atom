@@ -8,7 +8,7 @@
   text-align: center;
 }
 .posts_container_div p {
-  font-family: sans-serif;
+  font-family: 'montserrat',sans-serif;
   font-size: 15px;
   font-style: italic;
   font-weight: bold;
@@ -20,13 +20,25 @@
   text-align: center;
   align-items: center;
 }
-
-}
-h1 {
-  font-family: fantasy;
-  font-style: oblique;
-  font-weight: lighter;
+p,h1, h2, a, nav{
+  font-family: 'montserrat',sans-serif;
   letter-spacing: 2px;
+}
+button {
+  margin: 7px;
+  font-family: 'montserrat',sans-serif;
+  letter-spacing: 2px;
+  border: 3px solid #83f790;
+  border-radius: 30px;
+  background-color: inherit;
+}
+a {
+  text-decoration: none;
+  color: black;
+}
+a:hover {
+  text-decoration: underline;
+  cursor: pointer;
 }
 body {
   background-color: #bdebf9;
