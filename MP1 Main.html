@@ -7,15 +7,19 @@
 
       var root = 'https://jsonplaceholder.typicode.com';
       var n = 1;
+      var ewan;
       while(n < 11)
       {
-        $.ajax({
-          url: root + '/posts/' + n,
+        console.log(n);
+        ewan = $.ajax({
+          url: root + '/posts/?id=' + n,
           method: 'GET'
-        }).then(function(data) {
-          console.log(data);
-        });
+        });//.then(function(data) {
+        //
+        //   console.log(data);
+        // });
         n = n + 1;
+        console.log(ewan);
       }
     </script>
   </head>
