@@ -9,11 +9,18 @@
       var n = 1;
       var ewan;
       var userCon;
-      $(document).ready(function()
-        {$("#user_but").click(function()
-        {
-          redirect();
+      $(document).ready(function(){
+          $("#user_but").click(function() {
+            redirect();
         });
+        function redirect() {
+          userCon = $.ajax({
+             url: root + '/users/?name=Leanne+Graham',
+             method: 'GET'
+           });
+           $(".container_div").append("</br>" + userCon.responseText); //append ng bagong value
+           console.log(userCon);
+        }
       });
       // while(n < 11)
       // {
@@ -24,7 +31,6 @@
       //     $(".container_div").add(data);
       //   });
       //   n = n + 1;
-      }
     </script>
   </head>
   <body>
@@ -38,9 +44,8 @@
       <div id = "main_posts_div">
         <h2 id="section_header"> 10 most recent posts </h2>
         <div class ="container_div">
-          <!--<p>container_div test</p>-->
-          <p id = "post_1"></p>
-
+            <p>container_div test</p>
+            <p id = "post_1"></p>
         </div>
         <button type = "button" id = "prev_button"> Previous page </button>
         <button type = "button" id = "next_button"> Next page </button>
