@@ -8,24 +8,39 @@
       var root = 'https://jsonplaceholder.typicode.com';
       var n = 1;
       var ewan;
+      var userCon;
+      $(document).ready(function()
+        {$("#user").click(function()
+        {
+          redirect();
+        });
+      });
       while(n < 11)
       {
         console.log(n);
         ewan = $.ajax({
           url: root + '/posts/?id=' + n,
           method: 'GET'
-<<<<<<< HEAD
-        }).then(function(data) {
-          $(".container_div").add(data);
-        });
-=======
         });//.then(function(data) {
         //
         //   console.log(data);
         // });
->>>>>>> 3fe5719455461cda07e079f56034e81db40e8520
         n = n + 1;
         console.log(ewan);
+      }
+      console.log(ewan);
+
+
+
+
+      function redirect() {
+        var lel;
+        lel = $.ajax({
+          url: root + '/users/?name=Leanne+Graham',
+          method: 'GET'
+        });
+        //  $(".container_div").append("</br>" + lel.responseText["name"]); <append ng nakuhanang value
+        console.log(lel.responseText); //ito dapat yung kukuhanan ng value (string)
       }
     </script>
   </head>
@@ -39,7 +54,9 @@
         <button type = "button" id = "prev_button"> Previous page </button>
         <button type = "button" id = "next_button"> Next page </button>
         <nav class="menu">
-          <a href = "MP1 User.html"> Users </a>
+          <ul>
+            <li><a id="user"> Users </a></li>
+          </ul>
           <a href = "MP1 Albums.html"> Albums </a>
           <a href = "MP1 Photos.html"> Photos </a>
           <a href = "MP1 Posts.html"> Posts </a>
