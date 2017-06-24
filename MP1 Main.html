@@ -4,10 +4,19 @@
     <link href="MP1 css.css" rel="stylesheet" type="text/css"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js" type="text/javascript"></script>
     <script>
-    $(document).ready(function()
-      {
 
-      });
+      var root = 'https://jsonplaceholder.typicode.com';
+      var n = 1;
+      while(n < 11)
+      {
+        $.ajax({
+          url: root + '/posts/' + n,
+          method: 'GET'
+        }).then(function(data) {
+          console.log(data);
+        });
+        n = n + 1;
+      }
     </script>
   </head>
   <body>
@@ -17,8 +26,8 @@
         <div class ="container_div">
           <p>container_div test</p>
         </div>
-        <button type = "button"> Previous page </button>
-        <button type = "button"> Next page </button>
+        <button type = "button" id = "prev_button"> Previous page </button>
+        <button type = "button" id = "next_button"> Next page </button>
         <nav class="menu">
           <a href = "MP1 User.html"> Users </a>
           <a href = "MP1 Albums.html"> Albums </a>
