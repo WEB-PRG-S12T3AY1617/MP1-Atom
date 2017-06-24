@@ -15,31 +15,15 @@
           redirect();
         });
       });
-      while(n < 11)
-      {
-        var ewan;
-        ewan = $.ajax({
-          url: root + '/posts/?id=' + n,
-          method: 'GET'
-        });//.then(function(data) {
-        //
-        //   console.log(data);
-        // });
-        n = n + 1;
-      }
-      console.log(ewan);
-
-
-
-
-      function redirect() {
-        var lel;
-        lel = $.ajax({
-          url: root + '/users/?name=Leanne+Graham',
-          method: 'GET'
-        });
-        //  $(".container_div").append("</br>" + lel.responseText["name"]); <append ng nakuhanang value
-        console.log(lel.responseText); //ito dapat yung kukuhanan ng value (string)
+      // while(n < 11)
+      // {
+      //   $.ajax({
+      //     url: root + '/posts/' + n,
+      //     method: 'GET'
+      //   }).then(function(data) {
+      //     $(".container_div").add(data);
+      //   });
+      //   n = n + 1;
       }
     </script>
   </head>
