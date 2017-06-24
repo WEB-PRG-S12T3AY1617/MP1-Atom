@@ -13,7 +13,7 @@
           url: root + '/posts/' + n,
           method: 'GET'
         }).then(function(data) {
-          console.log(data);
+          $(".container_div").add(data);
         });
         n = n + 1;
       }
