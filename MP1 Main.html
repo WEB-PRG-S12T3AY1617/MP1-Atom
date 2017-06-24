@@ -16,9 +16,13 @@
         function redirect() {
           userCon = $.ajax({
              url: root + '/users/?name=Leanne+Graham',
-             method: 'GET'
+             method: 'GET',
+             dataType: 'json',
+              complete: function(data){
+                 alert(data);
+              }
            });
-           $(".container_div").append("</br>" + userCon.responseText); //append ng bagong value
+          //  $(".container_div").append("</br>" + userCon.responseText); //append ng bagong value
            console.log(userCon);
         }
       });
