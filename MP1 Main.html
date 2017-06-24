@@ -10,7 +10,7 @@
       var ewan;
       var userCon;
       $(document).ready(function()
-        {$("#user").click(function()
+        {$("#user_but").click(function()
         {
           redirect();
         });
@@ -45,8 +45,14 @@
   </head>
   <body>
     <section id = "page_div">
+      <nav class="menu">
+        <a id="user_but"> Users </a>
+        <a id="album_but"> Albums </a>
+        <a id="photo_but"> Photos </a>
+        <a id="post_but"> Posts </a>
+      </nav>
       <div id = "main_posts_div">
-        <h2> 10 most recent posts </h2>
+        <h2 id="section_header"> 10 most recent posts </h2>
         <div class ="container_div">
           <!--<p>container_div test</p>-->
           <p id = "post_1"></p>
@@ -54,14 +60,7 @@
         </div>
         <button type = "button" id = "prev_button"> Previous page </button>
         <button type = "button" id = "next_button"> Next page </button>
-        <nav class="menu">
-          <ul>
-            <li><a id="user"> Users </a></li>
-          </ul>
-          <a href = "MP1 Albums.html"> Albums </a>
-          <a href = "MP1 Photos.html"> Photos </a>
-          <a href = "MP1 Posts.html"> Posts </a>
-        </nav>
+
     </section>
   </body>
 </html>
