@@ -1,6 +1,8 @@
 var root = 'https://jsonplaceholder.typicode.com';
 var conDiv1 = 1; //if div class1
 var conDiv2 = 0; //if div class2
+var mPhoto = 0; //if more photos
+var mPost = 0; //if more posts
 
 $(document).ready(function(){
     //initial 10 posts
@@ -88,6 +90,11 @@ $(document).ready(function(){
         $("h5:last").remove();
       };
       $(".container_div2:last").remove();
+      var moreBut = document.createElement("button");
+      var butText = document.createTextNode("View More Posts");
+      moreBut.appendChild(butText);
+      moreBut.id = 'moreBut';
+      $(moreBut).insertAfter(".container_div2:last");
     };
     reqPost.send();
   };
@@ -106,6 +113,10 @@ $(document).ready(function(){
     var reqPhoto = new XMLHttpRequest();
     reqPhoto.open('GET', root + '/photos');
     reqPhoto.onload = function () {
+      var moreBut = document.createElement("button");
+      var butText = document.createTextNode("View More Photos");
+      moreBut.appendChild(butText);
+      moreBut.id = 'morePBut';
       var phThumb = JSON.parse(reqPhoto.responseText);
       while(count < 9) { // 9 pics max 1 div
         $("#post_1").append("<img src=" + '"' + phThumb[count].thumbnailUrl + '"></img>');
@@ -116,7 +127,19 @@ $(document).ready(function(){
       $("#newId1 p").append("<img src=" + '"' + phThumb[count].thumbnailUrl + '"></img>');
       $("#newId1 p").append("<img src=" + '"' + phThumb[11].thumbnailUrl + '"></img>');
       $("#newId1 p").append("<img src=" + '"' + phThumb[12].thumbnailUrl + '"></img>');
+      $(moreBut).appendTo("#main_posts_div:last");
+      var ewan = document.getElementById("morePBut");
+      console.log(ewan);
+      // ewan = document.getElementById("section_header");
+      // console.log(ewan);
     };
+    // var ewan = document.getElementById("morePBut");
+    // console.log(ewan);
+    // ewan = document.getElementById("section_header");
+    // console.log(ewan);
+
+
+
     reqPhoto.send();
   };
   //clears contents of container_div
