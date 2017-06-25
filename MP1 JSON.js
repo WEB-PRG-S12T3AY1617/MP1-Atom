@@ -1,89 +1,106 @@
 var root = 'https://jsonplaceholder.typicode.com';
-var if_empty = 0;
-var conDiv1 = 1;
-var conDiv2 = 0;
+var conDiv1 = 1; //if div class1
+var conDiv2 = 0; //if div class2
 
 $(document).ready(function(){
     //initial 10 posts
-    var inCount = 10; // paano palabasin?
-    var inReq = new XMLHttpRequest();
-    inReq.open('GET', root + '/posts');
-    inReq.onload = function () {
-      var inPost = JSON.parse(inReq.responseText);
-      while(inCount > 0) {
-        $("post_1").append(inPost[inCount - 1].body + "</br>");
-        inCount = inCount - 1;
+    document.onload = function () {
+      var inCount = 10; // paano palabasin?
+      var inReq = new XMLHttpRequest();
+      inReq.open('GET', root + '/posts');
+      inReq.onload = function () {
+        var inPost = JSON.parse(inReq.responseText);
+        while(inCount > 0) {
+          $("post_1").append(inPost[inCount - 1].body + "</br>");
+          inCount = inCount - 1;
+        };
+        inReq.send();
       };
-      if_empty = 1;
-      inReq.send();
+    };
+    function createNewElement() {
+      var newP = document.createElement("p");
+      var newHead = document.createElement("h2")
+      var newDiv = document.createElement("div");
+      var parentDiv = document.getElementById('main_posts_div');
+      newHead.id = "section_header";
+      newP.id = "post_1";
+      if(conDiv1 === 1)
+        newDiv.className = "container_div";
+      else {
+        newDiv.className = "container_div2";
+      }
+      newDiv.appendChild(newP);
+      parentDiv.appendChild(newHead);
+      parentDiv.appendChild(newDiv);
     };
     //user_but clicked
     $("#user_but").click(function() {
-      $(".container_div").addClass("container_div2").removeClass("container_div");
-      $("#section_header").text("Users");
+      clearCont();
       conDiv2 = 1;
       conDiv1 = 0;
+      createNewElement();
+      $("#section_header").text("Users");
+
       retUser();
   });
   //retrieves users
   function retUser() {
-    if(if_empty !== 0) {
-      clearCont();
-    }
     var count = 0;
     var reqUser = new XMLHttpRequest();
     reqUser.open('GET', root + '/users');
     reqUser.onload = function(){
       var userNme = JSON.parse(reqUser.responseText);
       while(count < userNme.length) {
-        $("#post_1").append(userNme[count].name + "</br>");
+        $("#post_1").append("<a>" + userNme[count].name + "</a>"+ "</br>");
         count = count + 1;
       };
     };
     reqUser.send();
     if_empty = 1;
+    currMenu = 1;
   };
   //post_but clicked
   $("#post_but").click(function () {
-      if(conDiv1 === 0)
-        $(".container_div2").addClass("container_div").removeClass("container_div2");
-      conDiv1 = 1;
-      conDiv2 = 0;
+      clearCont();
+      conDiv1 = 0;
+      conDiv2 = 1;
+      createNewElement();
       $("#section_header").text("Posts");
       retPost();
   });
   //retrieves post
   function retPost() {
-    if(if_empty !== 0) {
-      clearCont();
-    }
     var count = 0;
     var reqPost = new XMLHttpRequest();
     reqPost.open('GET', root + '/posts');
     reqPost.onload = function () {
       var nwPost = JSON.parse(reqPost.responseText);
+      $(".container_div2:last").attr('id', nwPost[count].userId);
       while(count < 10) {
-        $("#post_1").append(nwPost[count].body + "</br>");
+        $("<h5>" + nwPost[count].title + "</h5>").insertBefore("p:last");
+        $("p:last").append(nwPost[count].body + "</br>");
+        $("<a>" + nwPost[count].userId + "</a>").insertAfter("p:last");
         count = count + 1;
+        $(".container_div2:last").clone().prop({ id: nwPost[count].userId, name: "newName"}).appendTo("#main_posts_div");
+        $("p:last").text("");
+        $("a:last").remove();
+        $("h5:last").remove();
       };
+      $(".container_div2:last").remove();
     };
-    if_empty = 1;
     reqPost.send();
   };
   //photo_but clicked
   $("#photo_but").click(function () {
-      if(conDiv1 === 0)
-        $(".container_div2").addClass("container_div").removeClass("container_div2");
+      clearCont();
       conDiv1 = 1;
       conDiv2 = 0;
+      createNewElement();
       $("#section_header").text("Photos");
       retPhoto();
   });
   //retrieves photos
   function retPhoto() {
-    if(if_empty !== 0) {
-      clearCont();
-    }
     var count = 0;
     var reqPhoto = new XMLHttpRequest();
     reqPhoto.open('GET', root + '/photos');
@@ -93,13 +110,20 @@ $(document).ready(function(){
         $("#post_1").append("<img src=" + '"' + phThumb[count].thumbnailUrl + '"></img>');
         count = count + 1;
       };
+      $(".container_div").clone().prop({ id: "newId1", name: "newName"}).appendTo("#main_posts_div");
+      $("#newId1 p").text("");
+      $("#newId1 p").append("<img src=" + '"' + phThumb[count].thumbnailUrl + '"></img>');
+      $("#newId1 p").append("<img src=" + '"' + phThumb[11].thumbnailUrl + '"></img>');
+      $("#newId1 p").append("<img src=" + '"' + phThumb[12].thumbnailUrl + '"></img>');
     };
-    if_empty = 1;
     reqPhoto.send();
   };
   //clears contents of container_div
   function clearCont() {
-    $("#post_1").text("");
+    var parentDiv = document.getElementById('main_posts_div');
+    while (parentDiv.hasChildNodes()) {
+      parentDiv.removeChild(parentDiv.lastChild);
+    }
   };
 
 });
