@@ -51,7 +51,7 @@ $(document).ready(function(){
     reqUser.onload = function(){
       var userNme = JSON.parse(reqUser.responseText);
       while(count < userNme.length) {
-        $("#post_1").append("<a>" + userNme[count].name + "</a>"+ "</br>");
+        $("#post_1").append("<a href = '#', class = 'userAnc'>" + userNme[count].name + "</a>"+ "</br>");
         count = count + 1;
       };
     };
@@ -59,6 +59,14 @@ $(document).ready(function(){
     if_empty = 1;
     currMenu = 1;
   };
+
+  $(".userAnc").on('click', function(){
+    var a = 10;
+    console.log("hello");
+  });
+
+
+
   //post_but clicked
   $("#post_but").click(function () {
       clearCont();
