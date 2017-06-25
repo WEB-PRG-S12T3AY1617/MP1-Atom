@@ -9,13 +9,24 @@
   text-align: center;
   opacity: 0.8;
 }
-.container_div p {
+.container_div p,  .container_div2 p{
   font-family: 'montserrat',sans-serif;
   font-size: 15px;
   font-style: italic;
   font-weight: bold;
   letter-spacing: 2px;
   color: #aacbff;
+}
+.container_div2 {
+  align-content: center;
+  height: 217px;
+  width:  500px;
+  background-color: #e0ecf0;
+  display: flex;
+  border-radius: 15px;
+  flex-direction: column;
+  text-align: center;
+  opacity: 0.8;
 }
 .menu {
   margin: 15px;
