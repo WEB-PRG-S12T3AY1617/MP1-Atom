@@ -150,6 +150,26 @@ $(document).ready(function(){
 
     reqPhoto.send();
   };
+
+  $("#album_but").click(function(){
+    clearCont();
+    conDiv1 = 1;
+    conDiv2 = 0;
+    createNewElement();
+    $("#section_header").text("Albums");
+    retAlbums();
+  });
+
+  function retAlbums(){
+    var count = 0;
+    var reqAlbums = new XMLHttpRequest();
+    reqAlbums.open('GET', root + '/albums');
+    reqAlbums.onload = function () {
+      //pre walang thumbnails yung sa albums, bale yung thumbnail niya is isang random sample ng isang photo sa loob ng album.
+      //Bale susubukan ko muna ayusin yung paglink ng mga anchors bago ko ito ayusin. para madali na lang yung pag link.
+    }
+  };
+
   //clears contents of container_div
   function clearCont() {
     var parentDiv = document.getElementById('main_posts_div');
