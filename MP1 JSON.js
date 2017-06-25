@@ -4,7 +4,8 @@ var conDiv2 = 0; //if div class2
 
 $(document).ready(function(){
     //initial 10 posts
-    document.onload = function () {
+  window.onload = function () {
+      createNewElement();
       var inCount = 10; // paano palabasin?
       var inReq = new XMLHttpRequest();
       inReq.open('GET', root + '/posts');
