@@ -29,7 +29,7 @@ function getPhInf (phId) {
       useReq.open('GET', root + '/users/?id=' + alInf[0].userId);
       useReq.onload = function () {
         useInf = JSON.parse(useReq.responseText);
-        $("p:last").append("Author: " + "<a id =" + '"' + useInf[0].id + '"' + "onClick =" + '"' + "getUser(this.id)" + '">' + useInf[0].name + "</a>");
+        $("p:last").append("Author: " + "<a id =" + '"' + useInf[0].id + '"' + "onClick =" + '"' + "userInfo(this.id)" + '">' + useInf[0].name + "</a>");
         $("#post_1 a").css("color", "#84b3ff");
       };
       useReq.send();
@@ -104,6 +104,9 @@ function createNewElement() {
 };
 //retrieves users
 function retUser() {
+  $(".container_div2").css("padding", "10px");
+  $(".container_div2").css("border", "10px");
+  $(".container_div2").css("border", "10px solid #a6e6fc");
   var count = 0;
   var reqUser = new XMLHttpRequest();
   reqUser.open('GET', root + '/users');
@@ -146,21 +149,23 @@ function retPhoto(mCount, numId) {
 };
 //retrieves post
 function retPost(mCount) {
-  var userNme;
   var count = mCount;
   var reqPost = new XMLHttpRequest();
+  var reqUser = new XMLHttpRequest();
+  var userNme;
   reqPost.open('GET', root + '/posts');
   reqPost.onload = function () {
     var nwPost = JSON.parse(reqPost.responseText);
     $(".container_div2:last").attr('id', nwPost[count].userId);
     while(count < (mCount + 10)) {
-      // userNme = getUser(nwPost[count].userId);
-      // console.log(userNme);
       $("<h5>" + nwPost[count].title + "</h5>").insertBefore("p:last");
       $("p:last").append(nwPost[count].body + "</br>");
-
-      $("<a>" + nwPost[count].userId + "</a>").insertAfter("p:last");
-
+      reqUser.open('GET', root + '/users/?id=' + nwPost[count].userId, false);
+      reqUser.onload = function () {
+        userNme = JSON.parse(reqUser.responseText);
+        $("<a id =" + '"' + userNme[0].id + '"' + "onClick=" + '"' + "userInfo(this.id)" + '"' + ">" + userNme[0].name + "</a>").insertAfter("p:last");
+      };
+      reqUser.send();
       $(".container_div2:first").clone().prop({ id: nwPost[count + 1].userId, name: "newName"}).appendTo("#main_posts_div");
       $("p:last").text("");
       $("a:last").remove();
@@ -195,7 +200,6 @@ function retAlbums(){
   }
 };
 function initialStat(mCount) {
-  var userNme;
   if(inState === 1) {
     conDiv1 = 0;
     conDiv2 = 1;
@@ -207,17 +211,21 @@ function initialStat(mCount) {
   }
   var vCount = count;
   var reqPost = new XMLHttpRequest();
+  var reqUser = new XMLHttpRequest();
+  var userNme;
   reqPost.open('GET', root + '/posts');
   reqPost.onload = function () {
     var nwPost = JSON.parse(reqPost.responseText);
     $(".container_div2:last").attr('id', nwPost[count].userId);
-    console.log(vCount - 9);
     while(count >=(vCount - 9)) {
       $("<h5>" + nwPost[count].title + "</h5>").insertBefore("p:last");
       $("p:last").append(nwPost[count].body + "</br>");
-
-      $("<a>" + nwPost[count].userId + "</a>").insertAfter("p:last");
-
+      reqUser.open('GET', root + '/users/?id=' + nwPost[count].userId, false);
+      reqUser.onload = function () {
+          userNme = JSON.parse(reqUser.responseText);
+          $("<a id =" + '"' + userNme[0].id + '"' + "onClick=" + '"' + "userInfo(this.id)" + '"' + ">" + userNme[0].name + "</a>").insertAfter("p:last");
+      };
+      reqUser.send();
       $(".container_div2:first").clone().prop({ id: nwPost[count].userId, name: "newName"}).appendTo("#main_posts_div");
       $("p:last").text("");
       $("a:last").remove();
