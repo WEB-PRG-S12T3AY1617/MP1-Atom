@@ -8,7 +8,9 @@ function getPhInf (phId) {
   conDiv1 = 1;
   conDiv2 = 0;
   createNewElement();
-  alert("burat");
+  $(".container_div").css("height", "700px");
+  $(".container_div").css("width", "700px");
+
   var phReq = new XMLHttpRequest();
   var albReq = new XMLHttpRequest();
   var useReq = new XMLHttpRequest();
@@ -19,6 +21,7 @@ function getPhInf (phId) {
   phReq.onload = function () {
     phInf = JSON.parse(phReq.responseText);
     $("p:last").append("<img src=" + '"' + phInf[0].url + '"' + "></img></br>");
+    $("p:last").append(phInf[0].title + "</br>");
     albReq.open('GET', root + '/albums/?id=' + phInf[0].albumId);
     albReq.onload = function () {
       alInf = JSON.parse(albReq.responseText);
@@ -27,6 +30,7 @@ function getPhInf (phId) {
       useReq.onload = function () {
         useInf = JSON.parse(useReq.responseText);
         $("p:last").append("Author: " + "<a id =" + '"' + useInf[0].id + '"' + "onClick =" + '"' + "getUser(this.id)" + '">' + useInf[0].name + "</a>");
+        $("#post_1 a").css("color", "#84b3ff");
       };
       useReq.send();
     };
