@@ -2,7 +2,39 @@ var root = 'https://jsonplaceholder.typicode.com';
 var conDiv1 = 0; //if div class1
 var conDiv2 = 0; //if div class2
 var inState = 1;
-
+//retrieves photo information
+function getPhInf (phId) {
+  clearCont();
+  conDiv1 = 1;
+  conDiv2 = 0;
+  createNewElement();
+  alert("burat");
+  var phReq = new XMLHttpRequest();
+  var albReq = new XMLHttpRequest();
+  var useReq = new XMLHttpRequest();
+  var phInf;
+  var alInf;
+  var useInf;
+  phReq.open('GET', root + '/photos/?id=' + phId);
+  phReq.onload = function () {
+    phInf = JSON.parse(phReq.responseText);
+    $("p:last").append("<img src=" + '"' + phInf[0].url + '"' + "></img></br>");
+    albReq.open('GET', root + '/albums/?id=' + phInf[0].albumId);
+    albReq.onload = function () {
+      alInf = JSON.parse(albReq.responseText);
+      $("p:last").append("Album: " + "<a id =" + '"' + alInf[0].id + '"' + "onClick =" + '"' + "getAlbInf(this.id)" + '">' + alInf[0].title + "</a></br>");
+      useReq.open('GET', root + '/users/?id=' + alInf[0].userId);
+      useReq.onload = function () {
+        useInf = JSON.parse(useReq.responseText);
+        $("p:last").append("Author: " + "<a id =" + '"' + useInf[0].id + '"' + "onClick =" + '"' + "getUser(this.id)" + '">' + useInf[0].name + "</a>");
+      };
+      useReq.send();
+    };
+    albReq.send();
+  };
+  phReq.send();
+};
+//retrieves user
 function getUser (userId) {
   var uinfReq = new XMLHttpRequest();
   var userNme;
@@ -90,7 +122,7 @@ function retPhoto(mCount, numId) {
   reqPhoto.onload = function () {
     var phThumb = JSON.parse(reqPhoto.responseText);
     while(count < (mCount + 9)) { // 9 pics max 1 div
-      $("p:last").append("<img src=" + '"' + phThumb[count].thumbnailUrl + '"></img>');
+      $("p:last").append("<img src=" + '"' + phThumb[count].thumbnailUrl + '"' + "id =" + '"' + phThumb[count].id + '"' + "class =" + '"' + phThumb[count].albumId + '"' + "onClick='getPhInf(this.id)'></img>");
       count = count + 1;
     };
     var moreBut = document.createElement("button");
