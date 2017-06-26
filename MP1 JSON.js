@@ -38,6 +38,35 @@ function getPhInf (phId) {
   };
   phReq.send();
 };
+
+function getAlbInf(albId){
+  clearCont();
+  conDiv1 = 1;
+  conDiv2 = 0;
+  createNewElement();
+  $(".container_div").css("height", "800px");
+  $(".container_div").css("width", "1600px");
+  // $(".container_div").css("flex-direction", "row");
+
+  var phReq = new XMLHttpRequest();
+  var phInf;
+  var alInf;
+  var useInf;
+  var count = 1;
+
+  phReq.open('GET', root + '/photos/?albumId=' + albId);
+  phReq.onload = function () {
+    phInf = JSON.parse(phReq.responseText);
+    while(count <= (albId * 50))
+    {
+      $("p:last").append("<img src=" + '"' + phInf[(count - 1)].thumbnailUrl + '"' + "id = " + '"' + count + '"' + "onClick = " + '"' + "getPhInf(this.id)" + '"' + "></img>");
+      count = count + 1;
+    };
+
+  };
+  phReq.send();
+};
+
 //retrieves user
 function getUser (userId) {
   var uinfReq = new XMLHttpRequest();
@@ -190,15 +219,33 @@ function retPost(mCount) {
   };
   reqPost.send();
 };
-function retAlbums(){
-  var count = 0;
+function retAlbums(mCount, numId){
+  var count = mCount;//0
+  var albCount = numId;
   var reqAlbums = new XMLHttpRequest();
-  reqAlbums.open('GET', root + '/albums');
+  reqAlbums.open('GET', root + '/photos');
   reqAlbums.onload = function () {
-    //pre walang thumbnails yung sa albums, bale yung thumbnail niya is isang random sample ng isang photo sa loob ng album.
-    //Bale susubukan ko muna ayusin yung paglink ng mga anchors bago ko ito ayusin. para madali na lang yung pag link.
-  }
+    var phThumb = JSON.parse(reqAlbums.responseText);
+    while(count < (mCount + 5)) { // 5 thumbnails per div
+      $("p:last").append("<img src=" + '"' + phThumb[count].thumbnailUrl + '"' + "id =" + '"' + albCount + '"' + "class =" + '"' + phThumb[count].albumId + '"' + "onClick='getAlbInf(this.id)'></img>"); //work on this after making getAlbInf
+      count = count + 1;
+    };
+    count = count + 45;
+    var moreBut = document.createElement("button");
+    var butText = document.createTextNode("View More Albums");
+    moreBut.appendChild(butText);
+    moreBut.id = 'moreAlBut';
+    $(moreBut).insertAfter(".container_div:last");
+    $("#moreAlBut").click(function () {
+      $(".container_div:first").clone().prop({ id: numId + 1, name: "newName"}).appendTo("#main_posts_div");
+      $("p:last").text("");
+      $("#moreAlBut").remove();
+      retAlbums(count, (numId + 1));
+    });
+  };
+  reqAlbums.send();
 };
+
 function initialStat(mCount) {
   if(inState === 1) {
     conDiv1 = 0;
@@ -287,6 +334,6 @@ $(document).ready(function () {
       conDiv2 = 0;
       createNewElement();
       $("#section_header").text("Albums");
-      retAlbums();
+      retAlbums(0,1);
     });
 });
