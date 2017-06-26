@@ -47,21 +47,26 @@ function getAlbInf(albId){
   $(".container_div").css("height", "800px");
   $(".container_div").css("width", "1600px");
   // $(".container_div").css("flex-direction", "row");
-
+  $(".container_div").append("<div id ='album" + albId + "' class = 'albumDiv' ></div>");
   var phReq = new XMLHttpRequest();
   var phInf;
   var alInf;
   var useInf;
-  var count = 1;
+  var count;
+  var x;
 
   phReq.open('GET', root + '/photos/?albumId=' + albId);
   phReq.onload = function () {
     phInf = JSON.parse(phReq.responseText);
-    while(count <= (albId * 50))
+    console.log(phInf.length);
+    console.log(phInf);
+    for(x = 0; x < phInf.length; x++)
     {
-      $("p:last").append("<img src=" + '"' + phInf[(count - 1)].thumbnailUrl + '"' + "id = " + '"' + count + '"' + "onClick = " + '"' + "getPhInf(this.id)" + '"' + "></img>");
-      count = count + 1;
-    };
+      //$("p:last").append("<img src=" + '"' + phInf[count].thumbnailUrl + '"' + "id = " + '"' + count  + '"' + "onClick = " + '"' + "getPhInf(this.id)" + '"' + "></img>");
+      $("#album" + albId).append("<img src=" + '"' + phInf[x].thumbnailUrl + '"' + "id = " + '"' + albId  + '"' + "onClick = " + '"' + "getPhInf(this.id)" + '"' + "></img>");
+      // console.log("hello");
+      //count = count + 1;
+    }
 
   };
   phReq.send();
@@ -85,6 +90,9 @@ function userInfo (userId) {
   conDiv1 = 0;
   createNewElement();
   var uinfReq = new XMLHttpRequest();
+  var postsReq = new XMLHttpRequest();
+
+
   uinfReq.open('GET', root + '/users/?id=' + userId);
   uinfReq.onload = function(){
     var userProf = JSON.parse(uinfReq.responseText);
@@ -103,6 +111,19 @@ function userInfo (userId) {
     $("#post_1").append("Company: " + userProf[0].company.name + "</br>");
     $("#post_1").append(" &emsp;" + userProf[0].company.catchPhrase + "</br>");
     $("#post_1").append(" &emsp;" + userProf[0].company.bs + "</br>");
+  };
+
+
+  postsReq.open('GET', root + '/posts/?userId=' + userId);
+  postsReq.onload = function(){
+    var userPosts = JSON.parse(postsReq.responseText);
+    $(".container_div2").css("text-align", "left");
+    $(".container_div2").css("padding", "10px");
+    $(".container_div2").css("border", "10px");
+    $(".container_div2").css("border", "10px solid #a6e6fc");
+    $(".container_div2").css("height", "250px");
+    $("#section_header").text("Recent posts");
+    console.log(userPosts);
   };
   uinfReq.send();
 };
@@ -215,6 +236,7 @@ function retPost(mCount) {
       $("h5:last").remove();
       retPost(count);
       $(moreBut).remove();
+
     });
   };
   reqPost.send();
@@ -227,7 +249,7 @@ function retAlbums(mCount, numId){
   reqAlbums.onload = function () {
     var phThumb = JSON.parse(reqAlbums.responseText);
     while(count < (mCount + 5)) { // 5 thumbnails per div
-      $("p:last").append("<img src=" + '"' + phThumb[count].thumbnailUrl + '"' + "id =" + '"' + albCount + '"' + "class =" + '"' + phThumb[count].albumId + '"' + "onClick='getAlbInf(this.id)'></img>"); //work on this after making getAlbInf
+      $("p:last").append("<img src=" + '"' + phThumb[count].thumbnailUrl + '"' + "id =" + '"' + albCount + '"' + "class =" + '"' + phThumb[count].albumId + '"' + "onClick='getAlbInf(this.id)'></img>");
       count = count + 1;
     };
     count = count + 45;
@@ -239,8 +261,9 @@ function retAlbums(mCount, numId){
     $("#moreAlBut").click(function () {
       $(".container_div:first").clone().prop({ id: numId + 1, name: "newName"}).appendTo("#main_posts_div");
       $("p:last").text("");
-      $("#moreAlBut").remove();
       retAlbums(count, (numId + 1));
+      $("#moreAlBut").remove();
+
     });
   };
   reqAlbums.send();
