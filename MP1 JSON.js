@@ -1,8 +1,18 @@
 var root = 'https://jsonplaceholder.typicode.com';
-var conDiv1 = 1; //if div class1
+var conDiv1 = 0; //if div class1
 var conDiv2 = 0; //if div class2
-var mPhoto = 0; //if more photos
-var mPost = 0; //if more posts
+var inState = 1;
+
+function getUser (userId) {
+  var uinfReq = new XMLHttpRequest();
+  var userNme;
+  uinfReq.open('GET', root + '/users/?id=' + userId);
+  uinfReq.onload = function(){
+    userNme = JSON.parse(uinfReq.responseText);
+  };
+  console.log(typeof userNme);
+  uinfReq.send();
+};
 //retrieves user information
 function userInfo (userId) {
   clearCont();
@@ -13,10 +23,21 @@ function userInfo (userId) {
   uinfReq.open('GET', root + '/users/?id=' + userId);
   uinfReq.onload = function(){
     var userProf = JSON.parse(uinfReq.responseText);
+    $(".container_div2").css("text-align", "left");
+    $(".container_div2").css("padding", "10px");
+    $(".container_div2").css("border", "10px");
+    $(".container_div2").css("border", "10px solid #a6e6fc");
+    $(".container_div2").css("height", "250px");
     $("#section_header").text(userProf[0].name);
-    $("#post_1").append(userProf[0].id + "</br>");
-    $("#post_1").append(userProf[0].name + "</br>");
-    $("#post_1").append(userProf[0].phone + "</br>");
+    $("#post_1").append("ID: " + userProf[0].id + "</br>");
+    $("#post_1").append("Username: " + userProf[0].username + "</br>");
+    $("#post_1").append("Email: " + userProf[0].email + "</br>");
+    $("#post_1").append("Address: " + userProf[0].address.street + "," + userProf[0].address.suite + "," + userProf[0].address.city + "," + userProf[0].address.zipcode +"</br>");
+    $("#post_1").append("Phone: " + userProf[0].phone + "</br>");
+    $("#post_1").append("Website: " + userProf[0].website + "</br>");
+    $("#post_1").append("Company: " + userProf[0].company.name + "</br>");
+    $("#post_1").append(" &emsp;" + userProf[0].company.catchPhrase + "</br>");
+    $("#post_1").append(" &emsp;" + userProf[0].company.bs + "</br>");
   };
   uinfReq.send();
 };
@@ -89,6 +110,7 @@ function retPhoto(mCount, numId) {
 };
 //retrieves post
 function retPost(mCount) {
+  var userNme;
   var count = mCount;
   var reqPost = new XMLHttpRequest();
   reqPost.open('GET', root + '/posts');
@@ -96,9 +118,13 @@ function retPost(mCount) {
     var nwPost = JSON.parse(reqPost.responseText);
     $(".container_div2:last").attr('id', nwPost[count].userId);
     while(count < (mCount + 10)) {
+      // userNme = getUser(nwPost[count].userId);
+      // console.log(userNme);
       $("<h5>" + nwPost[count].title + "</h5>").insertBefore("p:last");
       $("p:last").append(nwPost[count].body + "</br>");
+
       $("<a>" + nwPost[count].userId + "</a>").insertAfter("p:last");
+
       $(".container_div2:first").clone().prop({ id: nwPost[count + 1].userId, name: "newName"}).appendTo("#main_posts_div");
       $("p:last").text("");
       $("a:last").remove();
@@ -132,56 +158,91 @@ function retAlbums(){
     //Bale susubukan ko muna ayusin yung paglink ng mga anchors bago ko ito ayusin. para madali na lang yung pag link.
   }
 };
-$(document).ready(function(){
-    //initial 10 posts
-  window.onload = function () {
-      createNewElement();
-      var inCount = 10; // paano palabasin?
-      var inReq = new XMLHttpRequest();
-      inReq.open('GET', root + '/posts');
-      inReq.onload = function () {
-        var inPost = JSON.parse(inReq.responseText);
-        while(inCount > 0) {
-          $("post_1").append(inPost[inCount - 1].body + "</br>");
-          inCount = inCount - 1;
-        };
-        inReq.send();
-      };
+function initialStat(mCount) {
+  var userNme;
+  if(inState === 1) {
+    conDiv1 = 0;
+    conDiv2 = 1;
+    createNewElement();
+    var count = 99;
+  }
+  else {
+    var count = mCount;
+  }
+  var vCount = count;
+  var reqPost = new XMLHttpRequest();
+  reqPost.open('GET', root + '/posts');
+  reqPost.onload = function () {
+    var nwPost = JSON.parse(reqPost.responseText);
+    $(".container_div2:last").attr('id', nwPost[count].userId);
+    console.log(vCount - 9);
+    while(count >=(vCount - 9)) {
+      $("<h5>" + nwPost[count].title + "</h5>").insertBefore("p:last");
+      $("p:last").append(nwPost[count].body + "</br>");
+
+      $("<a>" + nwPost[count].userId + "</a>").insertAfter("p:last");
+
+      $(".container_div2:first").clone().prop({ id: nwPost[count].userId, name: "newName"}).appendTo("#main_posts_div");
+      $("p:last").text("");
+      $("a:last").remove();
+      $("h5:last").remove();
+      count = count - 1;
     };
-    //user_but clicked
-    $("#user_but").click(function() {
-      clearCont();
-      conDiv2 = 1;
-      conDiv1 = 0;
-      createNewElement();
-      $("#section_header").text("Users");
-      retUser();
-  });
-  //post_but clicked
-  $("#post_but").click(function () {
-      clearCont();
-      conDiv1 = 0;
-      conDiv2 = 1;
-      createNewElement();
-      $("#section_header").text("Posts");
-      retPost(0);
-  });
-  //photo_but clicked
-  $("#photo_but").click(function () {
+    $(".container_div2:last").remove();
+    var moreBut = document.createElement("button");
+    var butText = document.createTextNode("View More Posts");
+    moreBut.appendChild(butText);
+    moreBut.id = "moreBut";
+    $(moreBut).insertAfter(".container_div2:last");
+    //moreBut clicked
+    $("#moreBut").click(function () {
+      inState = 0;
+      $(".container_div2:first").clone().prop({ id: nwPost[count].userId, name: "newName"}).appendTo("#main_posts_div");
+      $("p:last").text("");
+      $("a:last").remove();
+      $("h5:last").remove();
+      initialStat(count);
+      $(moreBut).remove();
+    });
+  };
+  reqPost.send();
+}
+$(document).ready(initialStat);
+$(document).ready(function () {
+      //user_but clicked
+      $("#user_but").click(function() {
+        clearCont();
+        conDiv2 = 1;
+        conDiv1 = 0;
+        createNewElement();
+        $("#section_header").text("Users");
+        retUser();
+    });
+    //post_but clicked
+    $("#post_but").click(function () {
+        clearCont();
+        conDiv1 = 0;
+        conDiv2 = 1;
+        createNewElement();
+        $("#section_header").text("Posts");
+        retPost(0);
+    });
+    //photo_but clicked
+    $("#photo_but").click(function () {
+        clearCont();
+        conDiv1 = 1;
+        conDiv2 = 0;
+        createNewElement();
+        $("#section_header").text("Photos");
+        retPhoto(0, 1);
+    });
+    //album_but clicked
+    $("#album_but").click(function(){
       clearCont();
       conDiv1 = 1;
       conDiv2 = 0;
       createNewElement();
-      $("#section_header").text("Photos");
-      retPhoto(0, 1);
-  });
-  //album_but clicked
-  $("#album_but").click(function(){
-    clearCont();
-    conDiv1 = 1;
-    conDiv2 = 0;
-    createNewElement();
-    $("#section_header").text("Albums");
-    retAlbums();
-  });
+      $("#section_header").text("Albums");
+      retAlbums();
+    });
 });
