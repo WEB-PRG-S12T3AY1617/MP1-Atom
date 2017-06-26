@@ -75,6 +75,7 @@ button:hover, nav a:hover {
 }
 a {
   text-decoration: none;
+  cursor: pointer;
 }
 body {
   background-color: #bdebf9;

@@ -27,6 +27,7 @@ $(document).ready(function(){
       var parentDiv = document.getElementById('main_posts_div');
       newHead.id = "section_header";
       newP.id = "post_1";
+      newDiv.id = "post_con1"
       if(conDiv1 === 1)
         newDiv.className = "container_div";
       else {
@@ -77,32 +78,41 @@ $(document).ready(function(){
       conDiv2 = 1;
       createNewElement();
       $("#section_header").text("Posts");
-      retPost();
+      retPost(0);
   });
   //retrieves post
-  function retPost() {
-    var count = 0;
+  function retPost(mCount) {
+    var count = mCount;
     var reqPost = new XMLHttpRequest();
     reqPost.open('GET', root + '/posts');
     reqPost.onload = function () {
       var nwPost = JSON.parse(reqPost.responseText);
       $(".container_div2:last").attr('id', nwPost[count].userId);
-      while(count < 10) {
+      while(count < (mCount + 10)) {
         $("<h5>" + nwPost[count].title + "</h5>").insertBefore("p:last");
         $("p:last").append(nwPost[count].body + "</br>");
         $("<a>" + nwPost[count].userId + "</a>").insertAfter("p:last");
-        count = count + 1;
-        $(".container_div2:last").clone().prop({ id: nwPost[count].userId, name: "newName"}).appendTo("#main_posts_div");
+        $(".container_div2:first").clone().prop({ id: nwPost[count + 1].userId, name: "newName"}).appendTo("#main_posts_div");
         $("p:last").text("");
         $("a:last").remove();
         $("h5:last").remove();
+        count = count + 1;
       };
       $(".container_div2:last").remove();
       var moreBut = document.createElement("button");
       var butText = document.createTextNode("View More Posts");
       moreBut.appendChild(butText);
-      moreBut.id = 'moreBut';
+      moreBut.id = "moreBut";
       $(moreBut).insertAfter(".container_div2:last");
+      //moreBut clicked
+      $("#moreBut").click(function () {
+        $(".container_div2:first").clone().prop({ id: nwPost[count + 1].userId, name: "newName"}).appendTo("#main_posts_div");
+        $("p:last").text("");
+        $("a:last").remove();
+        $("h5:last").remove();
+        retPost(count);
+        $(moreBut).remove();
+      });
     };
     reqPost.send();
   };
@@ -113,43 +123,35 @@ $(document).ready(function(){
       conDiv2 = 0;
       createNewElement();
       $("#section_header").text("Photos");
-      retPhoto();
+      retPhoto(0, 1);
   });
   //retrieves photos
-  function retPhoto() {
-    var count = 0;
+  function retPhoto(mCount, numId) {
+    var count = mCount;
     var reqPhoto = new XMLHttpRequest();
     reqPhoto.open('GET', root + '/photos');
     reqPhoto.onload = function () {
+      var phThumb = JSON.parse(reqPhoto.responseText);
+      while(count < (mCount + 9)) { // 9 pics max 1 div
+        $("p:last").append("<img src=" + '"' + phThumb[count].thumbnailUrl + '"></img>');
+        count = count + 1;
+      };
       var moreBut = document.createElement("button");
       var butText = document.createTextNode("View More Photos");
       moreBut.appendChild(butText);
       moreBut.id = 'morePBut';
-      var phThumb = JSON.parse(reqPhoto.responseText);
-      while(count < 9) { // 9 pics max 1 div
-        $("#post_1").append("<img src=" + '"' + phThumb[count].thumbnailUrl + '"></img>');
-        count = count + 1;
-      };
-      $(".container_div").clone().prop({ id: "newId1", name: "newName"}).appendTo("#main_posts_div");
-      $("#newId1 p").text("");
-      $("#newId1 p").append("<img src=" + '"' + phThumb[count].thumbnailUrl + '"></img>');
-      $("#newId1 p").append("<img src=" + '"' + phThumb[11].thumbnailUrl + '"></img>');
-      $("#newId1 p").append("<img src=" + '"' + phThumb[12].thumbnailUrl + '"></img>');
-      $(moreBut).appendTo("#main_posts_div:last");
-      var ewan = document.getElementById("morePBut");
-      console.log(ewan);
-      // ewan = document.getElementById("section_header");
-      // console.log(ewan);
+      $(moreBut).insertAfter(".container_div:last");
+      //morePBut clicked
+      $("#morePBut").click(function () {
+        $(".container_div:first").clone().prop({ id: "post_con" + (numId + 1), name: "newName"}).appendTo("#main_posts_div");
+        $("p:last").text("");
+        $("#morePBut").remove();
+        retPhoto(count, (numId + 1));
+      });
     };
-    // var ewan = document.getElementById("morePBut");
-    // console.log(ewan);
-    // ewan = document.getElementById("section_header");
-    // console.log(ewan);
-
-
-
     reqPhoto.send();
   };
+
 
   $("#album_but").click(function(){
     clearCont();
@@ -169,7 +171,6 @@ $(document).ready(function(){
       //Bale susubukan ko muna ayusin yung paglink ng mga anchors bago ko ito ayusin. para madali na lang yung pag link.
     }
   };
-
   //clears contents of container_div
   function clearCont() {
     var parentDiv = document.getElementById('main_posts_div');
