@@ -3,13 +3,22 @@ var conDiv1 = 1; //if div class1
 var conDiv2 = 0; //if div class2
 var mPhoto = 0; //if more photos
 var mPost = 0; //if more posts
-
+//retrieves user information
 function userInfo (userId) {
-  var b = userId
-  console.log(userId);
-  console.log(b);
+  clearCont();
+  conDiv2 = 1;
+  conDiv1 = 0;
+  createNewElement();
   var uinfReq = new XMLHttpRequest();
-
+  uinfReq.open('GET', root + '/users/?id=' + userId);
+  uinfReq.onload = function(){
+    var userProf = JSON.parse(uinfReq.responseText);
+    $("#section_header").text(userProf[0].name);
+    $("#post_1").append(userProf[0].id + "</br>");
+    $("#post_1").append(userProf[0].name + "</br>");
+    $("#post_1").append(userProf[0].phone + "</br>");
+  };
+  uinfReq.send();
 };
 //clears contents of container_div
 function clearCont() {
