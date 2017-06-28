@@ -95,8 +95,10 @@ function userInfo (userId) {
   conDiv2 = 1;
   conDiv1 = 0;
   createNewElement();
+  var count = 0;
   var uinfReq = new XMLHttpRequest();
   var postsReq = new XMLHttpRequest();
+  var photosReq = new XMLHttpRequest();
 
 
 
@@ -118,26 +120,106 @@ function userInfo (userId) {
     $("#post_1").append("Company: " + userProf[0].company.name + "</br>");
     $("#post_1").append(" &emsp;" + userProf[0].company.catchPhrase + "</br>");
     $("#post_1").append(" &emsp;" + userProf[0].company.bs + "</br>");
+
     postsReq.open('GET', root + '/posts/?userId=' + userId);
     postsReq.onload = function(){
       var userPosts = JSON.parse(postsReq.responseText);
-      $(".container_div:first").clone().prop({ id: "post_con", name: "newName"}).appendTo("#main_posts_div");
+      conDiv2 = 0;
+      conDiv1 = 1;
+      $(".container_div2:first").clone().prop({ id: "inuserPosts", name: "newName"}).appendTo("#main_posts_div");
+      $("#inuserPosts").css("height", "300px");
+      $("#inuserPosts").empty();
+      $("#inuserPosts").append("<p id ='posts'></p>");
+
+      //createNewElement();
       // $("#post_con").css("text-align", "left");
       // $("#post_con").css("padding", "10px");
       // $(".container_div2").css("border", "10px");
       // $(".container_div2").css("border", "10px solid #a6e6fc");
       // $(".container_div2").css("height", "250px");
-      $(".post_con").append(userPosts[0].body);
-      // $("#section_header").text("Recent posts");
-      console.log("hello");
+      $("#posts").append("<u>Recent posts of this user:</u><br><br>");
+      $("#posts").append("Title: " + userPosts[0].title + "<br>");
+      $("#posts").append('"' + userPosts[0].body + '"' + "<br><br>");
+      $("#posts").append("Title: " + userPosts[1].title + "<br>");
+      $("#posts").append('"' + userPosts[1].body + '"' + "<br><br>");
+      var moreBut = document.createElement("button");
+      var butText = document.createTextNode("View More Posts");
+      moreBut.appendChild(butText);
+      moreBut.id = 'morePostsBut';
+      $(moreBut).insertAfter("#inuserPosts");
+      $("#morePostsBut").click(function(){
+        loaduserPosts(userId);
+      });//loaduserPosts(userId));
     };
     postsReq.send();
+
+    photosReq.open('GET', root + '/albums/?userId=' + userId);
+    photosReq.onload = function(){
+      var userphotos = JSON.parse(photosReq.responseText);
+      conDiv1 = 1;
+      conDiv2 = 0;
+      $(".container_div2:first").clone().prop({ id: "inuserAlbums", name: "newName"}).appendTo("#main_posts_div");
+      $("#inuserAlbums").css("height", "500px");
+      $("#inuserAlbums").empty();
+      $("#inuserAlbums").append("<p id ='albums'></p>");
+      $("#albums").append("<u>Albums of this user:</u><br><br>");
+      console.log("hello");
+      while(count < 10)
+      {
+        $("#albums").append("<a id =" + '"' + userphotos[count].id + '"' + "onClick = 'getAlbInf(this.id)'>" + userphotos[count].title + "</a><br><br>");
+        count = count + 1;
+      }
+    };
+    photosReq.send();
   };
 
 
 
   uinfReq.send();
 };
+
+function loaduserPosts(userId)
+{
+  clearCont();
+  conDiv2 = 1;
+  conDiv1 = 0;
+  createNewElement();
+  var count = 0;
+  var userdata = new XMLHttpRequest();
+  userdata.open('GET', root + '/users/?id=' + userId);
+  userdata.onload = function(){
+    var userdatadata = JSON.parse(userdata.responseText);
+    $("#section_header").text(userdatadata[0].name + "'s posts");
+  };
+  userdata.send();
+  var userpostsReq = new XMLHttpRequest();
+  userpostsReq.open('GET', root + '/posts/?userId=' + userId);
+  userpostsReq.onload = function(){
+    var postsreqdata = JSON.parse(userpostsReq.responseText);
+    while(count < 10)
+    {
+      $("<h5>" + postsreqdata[count].title + "</h5>").insertBefore("p:last");
+      $("p:last").append(postsreqdata[count].body + "</br>");
+      $(".container_div2:first").clone().prop({ id: count, name: "newName"}).appendTo("#main_posts_div");
+      $("p:last").text("");
+      $("h5:last").remove();
+
+      count = count + 1;
+    }
+    $("div:last").remove();
+    var moreBut = document.createElement("button");
+    var butText = document.createTextNode("Return to user page");
+    moreBut.appendChild(butText);
+    moreBut.id = 'returnBut';
+    $(moreBut).insertAfter("div:last");
+    $("#returnBut").click(function(){
+      userInfo(userId);
+    });
+  };
+
+  userpostsReq.send();
+};
+
 //clears contents of container_div
 function clearCont() {
   var parentDiv = document.getElementById('main_posts_div');
