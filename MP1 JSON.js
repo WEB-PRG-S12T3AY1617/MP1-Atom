@@ -46,9 +46,9 @@ function getAlbInf(albId){
   createNewElement();
   $(".container_div").css("height", "800px");
   $(".container_div").css("width", "1600px");
-  // $(".container_div").css("flex-direction", "row");
   $(".container_div").append("<div id ='album" + albId + "' class = 'albumDiv' ></div>");
   var phReq = new XMLHttpRequest();
+  var albReq = new XMLHttpRequest();
   var phInf;
   var alInf;
   var useInf;
@@ -58,12 +58,18 @@ function getAlbInf(albId){
   phReq.open('GET', root + '/photos/?albumId=' + albId);
   phReq.onload = function () {
     phInf = JSON.parse(phReq.responseText);
-    console.log(phInf.length);
     console.log(phInf);
+    albReq.open('GET', root + '/albums/?id=' + albId);
+    albReq.onload = function(){
+      alInf = JSON.parse(albReq.responseText);
+      $("#section_header").text(alInf[0].title);
+    }
+    albReq.send();
+
     for(x = 0; x < phInf.length; x++)
     {
       //$("p:last").append("<img src=" + '"' + phInf[count].thumbnailUrl + '"' + "id = " + '"' + count  + '"' + "onClick = " + '"' + "getPhInf(this.id)" + '"' + "></img>");
-      $("#album" + albId).append("<img src=" + '"' + phInf[x].thumbnailUrl + '"' + "id = " + '"' + albId  + '"' + "onClick = " + '"' + "getPhInf(this.id)" + '"' + "></img>");
+      $("#album" + albId).append("<img src=" + '"' + phInf[x].thumbnailUrl + '"' + "id = " + '"' + ((((albId*50)-50)+x)+1)  + '"' + "onClick = " + '"' + "getPhInf(this.id)" + '"' + "></img>");
       // console.log("hello");
       //count = count + 1;
     }
@@ -93,6 +99,7 @@ function userInfo (userId) {
   var postsReq = new XMLHttpRequest();
 
 
+
   uinfReq.open('GET', root + '/users/?id=' + userId);
   uinfReq.onload = function(){
     var userProf = JSON.parse(uinfReq.responseText);
@@ -111,20 +118,24 @@ function userInfo (userId) {
     $("#post_1").append("Company: " + userProf[0].company.name + "</br>");
     $("#post_1").append(" &emsp;" + userProf[0].company.catchPhrase + "</br>");
     $("#post_1").append(" &emsp;" + userProf[0].company.bs + "</br>");
+    postsReq.open('GET', root + '/posts/?userId=' + userId);
+    postsReq.onload = function(){
+      var userPosts = JSON.parse(postsReq.responseText);
+      $(".container_div:first").clone().prop({ id: "post_con", name: "newName"}).appendTo("#main_posts_div");
+      // $("#post_con").css("text-align", "left");
+      // $("#post_con").css("padding", "10px");
+      // $(".container_div2").css("border", "10px");
+      // $(".container_div2").css("border", "10px solid #a6e6fc");
+      // $(".container_div2").css("height", "250px");
+      $(".post_con").append(userPosts[0].body);
+      // $("#section_header").text("Recent posts");
+      console.log("hello");
+    };
+    postsReq.send();
   };
 
 
-  postsReq.open('GET', root + '/posts/?userId=' + userId);
-  postsReq.onload = function(){
-    var userPosts = JSON.parse(postsReq.responseText);
-    $(".container_div2").css("text-align", "left");
-    $(".container_div2").css("padding", "10px");
-    $(".container_div2").css("border", "10px");
-    $(".container_div2").css("border", "10px solid #a6e6fc");
-    $(".container_div2").css("height", "250px");
-    $("#section_header").text("Recent posts");
-    console.log(userPosts);
-  };
+
   uinfReq.send();
 };
 //clears contents of container_div
@@ -245,6 +256,7 @@ function retAlbums(mCount, numId){
   var count = mCount;//0
   var albCount = numId;
   var reqAlbums = new XMLHttpRequest();
+  var reqData = new XMLHttpRequest();
   reqAlbums.open('GET', root + '/photos');
   reqAlbums.onload = function () {
     var phThumb = JSON.parse(reqAlbums.responseText);
@@ -252,6 +264,12 @@ function retAlbums(mCount, numId){
       $("p:last").append("<img src=" + '"' + phThumb[count].thumbnailUrl + '"' + "id =" + '"' + albCount + '"' + "class =" + '"' + phThumb[count].albumId + '"' + "onClick='getAlbInf(this.id)'></img>");
       count = count + 1;
     };
+    reqData.open('GET', root + '/albums');
+    reqData.onload = function(){
+      var alTitle = JSON.parse(reqData.responseText);
+      $("p:last").append("</br><a id =" + '"' + albCount + '"' + "onClick = 'getAlbInf(this.id)'>" + alTitle[(albCount-1)].title + "</a>");
+    };
+    reqData.send();
     count = count + 45;
     var moreBut = document.createElement("button");
     var butText = document.createTextNode("View More Albums");
