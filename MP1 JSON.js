@@ -350,6 +350,7 @@ function retAlbums(mCount, numId){
     reqData.onload = function(){
       var alTitle = JSON.parse(reqData.responseText);
       $("p:last").append("</br><a id =" + '"' + albCount + '"' + "onClick = 'getAlbInf(this.id)'>" + alTitle[(albCount-1)].title + "</a>");
+      $("a:last").css("color", "#4784e8");
     };
     reqData.send();
     count = count + 45;
